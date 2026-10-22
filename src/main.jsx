@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
+
 const memories = [
-  { file: "/photos/photo-1.jpg", label: "My favourite smile", note: "Some moments become memories. You make ordinary moments feel special." },
-  { file: "/photos/photo-2.jpg", label: "Us, being us", note: "Meri favourite jagah koi place nahi… tumhare paas hai." },
-  { file: "/photos/photo-3.jpg", label: "A little forever", note: "Har photo mein ek kahaani hai, aur meri favourite kahaani hum hain." },
+  { file: `${import.meta.env.BASE_URL}photos/photo-1.jpg`, label: "My favourite smile", note: "Some moments become memories. You make ordinary moments feel special." },
+  { file: `${import.meta.env.BASE_URL}photos/photo-2.jpg`, label: "Us, being us", note: "Meri favourite jagah koi place nahi… tumhare paas hai." },
+  { file: `${import.meta.env.BASE_URL}photos/photo-3.jpg`, label: "A little forever", note: "Har photo mein ek kahaani hai, aur meri favourite kahaani hum hain." },
 ];
+
 
 function Heart({ className = "" }) {
   return <span aria-hidden="true" className={`heart ${className}`}>♥</span>;
@@ -89,7 +91,7 @@ function App() {
         <div className="hero-art" aria-label="Decorative romantic illustration">
           <div className="sun-orb" />
           <div className="hero-photo-frame">
-            <img src="/photos/cover.jpg" alt="A favourite photo of Roshni and her husband" onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.parentElement.classList.add("photo-placeholder"); }} />
+            <img src={`${import.meta.env.BASE_URL}photos/cover.jpg`} alt="A favourite photo of Roshni and her husband" onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.parentElement.classList.add("photo-placeholder"); }} />
             <div className="placeholder-content"><span className="placeholder-heart">♡</span><span>Put your favourite<br />photo here</span><small>public/photos/cover.jpg</small></div>
           </div>
           <div className="floating-note note-one">my favourite person <Heart /></div>
@@ -131,7 +133,7 @@ function App() {
         <div className="story-grid">
           <div className="story-visual">
             <div className="story-image">
-              <img src="/photos/memory-main.jpg" alt="A special memory together" onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.parentElement.classList.add("photo-placeholder"); }} />
+              <img src={`${import.meta.env.BASE_URL}photos/memory-main.jpg`} alt="A special memory together" onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.parentElement.classList.add("photo-placeholder"); }} />
               <div className="placeholder-content"><span className="placeholder-heart">♡</span><span>Your favourite memory</span><small>public/photos/memory-main.jpg</small></div>
             </div>
             <div className="handwritten">still choosing you <Heart /></div>
@@ -218,7 +220,7 @@ function App() {
       {lightbox && <div className="lightbox" role="dialog" aria-modal="true" aria-label={lightbox.label} onClick={() => setLightbox(null)}>
         <button className="modal-close" onClick={() => setLightbox(null)} aria-label="Close photo">×</button>
         <div className="lightbox-card" onClick={(e) => e.stopPropagation()}>
-          <div className="lightbox-image"><img src={lightbox.file} alt={lightbox.label} onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.parentElement.classList.add("photo-placeholder"); }} /><div className="placeholder-content"><span className="placeholder-heart">♡</span><span>Add your photo</span></div></div>
+          <div className="lightbox-image"><img src={`${import.meta.env.BASE_URL}${lightbox.file.replace(/^\//, "")}`} alt={lightbox.label} onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.parentElement.classList.add("photo-placeholder"); }} /><div className="placeholder-content"><span className="placeholder-heart">♡</span><span>Add your photo</span></div></div>
           <h3>{lightbox.label}</h3><p>{lightbox.note}</p>
         </div>
       </div>}
