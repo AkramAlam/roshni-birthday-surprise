@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
@@ -20,6 +20,24 @@ function App() {
   const [showPromises, setShowPromises] = useState(false);
   const [candles, setCandles] = useState(false);
   const [musicOn, setMusicOn] = useState(false);
+  const audioRef = useRef(null);
+  const toggleMusic = async () => {
+    const audio = audioRef.current;
+
+    if (!audio) return;
+
+    if (musicOn) {
+      audio.pause();
+      setMusicOn(false);
+    } else {
+      try {
+        await audio.play();
+        setMusicOn(true);
+      } catch (error) {
+        console.error("Music play nahi ho paya:", error);
+      }
+    }
+  };
   const [lightbox, setLightbox] = useState(null);
   const [days, setDays] = useState(null);
 
@@ -68,6 +86,13 @@ function App() {
 
   return (
     <main>
+      <audio
+        ref={audioRef}
+        src={`${import.meta.env.BASE_URL}music/birthday-song.mp3`}
+        loop
+        preload="auto"
+      />
+
       <div className="grain" aria-hidden="true" />
       <div className="floating-hearts" aria-hidden="true"><span>♡</span><span>♥</span><span>♡</span><span>♥</span><span>♡</span><span>♥</span></div>
       <nav className="nav wrap">
@@ -75,7 +100,7 @@ function App() {
         <a className="nav-date" href="#birthday">22 · OCT <Heart /></a>
       </nav>
 
-      <div className="birthday-marquee" aria-label="Happy Birthday Roshni"><div className="marquee-track">{Array.from({length: 8}, (_, i) => <span key={i}>HAPPY BIRTHDAY ROSHNI <b>♡</b> MERI MOTKI <b>✦</b></span>)}</div></div>
+      <div className="birthday-marquee" aria-label="Happy Birthday Roshni"><div className="marquee-track">{Array.from({ length: 8 }, (_, i) => <span key={i}>HAPPY BIRTHDAY ROSHNI <b>♡</b> MERI MOTKI <b>✦</b></span>)}</div></div>
 
       <section className="hero wrap" id="top">
         <div className="hero-copy">
@@ -168,7 +193,7 @@ function App() {
         </div>
       </section>
 
-      <div className="birthday-marquee marquee-soft" aria-label="Wishing you a beautiful birthday"><div className="marquee-track reverse">{Array.from({length: 8}, (_, i) => <span key={i}>IT'S YOUR DAY, ROSHNI <b>♡</b> KEEP SMILING ALWAYS <b>✦</b></span>)}</div></div>
+      <div className="birthday-marquee marquee-soft" aria-label="Wishing you a beautiful birthday"><div className="marquee-track reverse">{Array.from({ length: 8 }, (_, i) => <span key={i}>IT'S YOUR DAY, ROSHNI <b>♡</b> KEEP SMILING ALWAYS <b>✦</b></span>)}</div></div>
 
       <section className="letter-section wrap section-pad" id="letter">
         <div className="letter-art"><div className="letter-sun" /><div className="envelope"><div className="envelope-flap" /><div className="envelope-paper">To my<br /><em>Roshni</em><Heart /></div><span className="wax-seal">r</span></div><span className="letter-spark">✧</span></div>
@@ -224,8 +249,23 @@ function App() {
           <h3>{lightbox.label}</h3><p>{lightbox.note}</p>
         </div>
       </div>}
-      <button className={`sound-toggle ${musicOn ? "active" : ""}`} onClick={() => setMusicOn(!musicOn)} title="Music note" aria-label="Toggle music note animation">{musicOn ? "♫" : "♪"}<span>{musicOn ? "vibes on" : "for the mood"}</span></button>
-      {musicOn && <div className="music-toast">Play your favourite song separately for the perfect moment ♡</div>}
+      
+<button
+  className={`sound-toggle ${musicOn ? "active" : ""}`}
+  onClick={toggleMusic}
+  title="Play or pause birthday song"
+  aria-label={musicOn ? "Pause birthday song" : "Play birthday song"}
+>
+  {musicOn ? "♫" : "♪"}
+  <span>{musicOn ? "pause music" : "play our song"}</span>
+</button>
+
+{musicOn && (
+  <div className="music-toast">
+    Playing our special song ♡
+  </div>
+)}
+
     </main>
   );
 }
